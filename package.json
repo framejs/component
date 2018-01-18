@@ -1,0 +1,19 @@
+{
+  "name": "@framejs/component",
+  "version": "0.0.1",
+  "description": "A ultra light typescript framework for writing custom elements",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/framejs/component.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/framejs/component/issues"
+  },
+  "homepage": "https://github.com/framejs/component#readme"
+}
