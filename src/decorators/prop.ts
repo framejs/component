@@ -17,6 +17,7 @@ export const Prop = () => {
 
                 // Run any function registered for this property using @Watch(name: string)
                 runObserver(this, name, oldValue, value);
+                
                 this._invalidate();
             }, 
             get: function() {

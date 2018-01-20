@@ -9,7 +9,7 @@ import {
     unbindListeners
 } from "../core/instance-helpers.js";
 
-import { camelCase } from '../utils/camel-case.js';
+import { camelCase } from "../utils/camel-case.js";
 
 export interface ComponentOptionsType {
     tag: string;
@@ -28,13 +28,20 @@ export const Component = (options: ComponentOptionsType) => {
             public _needsShadyCSS: boolean = typeof (<any>window).ShadyCSS ===
                 "object";
 
+            public _listernesBound: boolean = false;
+
             // Register native observedAttributes
             static get observedAttributes() {
-                return [...target._observedAttributes];
+                if (target._observedAttributes) {
+                    return [...target._observedAttributes];
+                } else {
+                    return []
+                }
             }
 
             constructor() {
                 super();
+                
                 // Attach shadow if not set.
                 attachShadow(this);
             }
@@ -42,11 +49,11 @@ export const Component = (options: ComponentOptionsType) => {
             connectedCallback() {
                 // Let other decorators know that the component is instanciated.
                 this.__connected = true;
-                
+
                 // _values gets set by @Attr and @Prop decorators
                 if (this._values) setDefaultValues(this, this._values);
-                if (target._observedAttributes) setDefaultAttributes(this, target._observedAttributes);
-                if (target._listeners) bindListeners(this, target, target._listeners)
+                if (target._observedAttributes)
+                    setDefaultAttributes(this, target._observedAttributes);
 
                 // Call any previously defined connectedCallback functions.
                 super.connectedCallback && super.connectedCallback();
@@ -55,14 +62,23 @@ export const Component = (options: ComponentOptionsType) => {
             }
 
             disconnectedCallback() {
-                if (target._listeners) unbindListeners(this, target, target._listeners)
+                if (target._listeners)
+                    unbindListeners(this, target, target._listeners);
             }
 
             attributeChangedCallback(name, oldValue, newValue) {
-                super.attributeChangedCallback && 
+                super.attributeChangedCallback &&
                 super.attributeChangedCallback(name, oldValue, newValue);
-                const property = camelCase(name);
-                this[property] = normaliseAttributeValue(this, name, newValue, oldValue);
+                
+                if (oldValue !== newValue) {
+                    const property = camelCase(name);
+                    this[property] = normaliseAttributeValue(
+                        this,
+                        name,
+                        newValue,
+                        oldValue
+                    );
+                }
             }
 
             async _invalidate() {
@@ -88,6 +104,9 @@ export const Component = (options: ComponentOptionsType) => {
                     // Update host template
                     this.shadowRoot.innerHTML = this.render();
                 }
+                
+                if (!this._listernesBound && target._listeners) bindListeners(this, target, target._listeners);
+                this._listernesBound = true;
             }
         };
 

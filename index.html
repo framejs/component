@@ -7,8 +7,13 @@
     <title>Test view for @framejs/component</title>
 </head>
 <body>
-    <my-element checked></my-element>
-    <my-element></my-element>
-    <script type="module" src="dist/index.js"></script>
+    <frame-typeahead>
+        <input type="text">
+    </frame-typeahead>
+    <!-- <frame-app></frame-app> -->
+    <script type="module" src="dist/app.js"></script>
+    <script id="__bs_script__">//<![CDATA[
+        document.write("<script async src='http://HOST:3000/browser-sync/browser-sync-client.js?v=2.23.5'><\/script>".replace("HOST", location.hostname));
+    //]]></script>
 </body>
 </html>

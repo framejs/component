@@ -4,6 +4,7 @@ import { dashCase } from '../utils/dash-case.js';
 export const Attr = () => {
     return (target: any, name: string) => {
         const attribute = dashCase(name);
+
         // Register attribute for re-applying attributes when connected
         registerAttribute(target, attribute);
 
@@ -11,6 +12,7 @@ export const Attr = () => {
             set: function(value) {
                 // Get the value before it gets updated with new value
                 const oldValue = getPropValue(this, name);
+                
                 // Update _value with new value
                 setPropValue(this, name, value);
 

@@ -67,7 +67,7 @@ export const registerListener = (elem: any, listener: string, name: string) => {
             [listener]: name
         };
     } else {
-        elem.constructor._listeners[listener] = listener;
+        elem.constructor._listeners[listener] = name;
     }
 };
 
@@ -81,7 +81,12 @@ const parseListener = (elem, listener: string) => {
         if (listenerArray[0] === 'window') {
             obj.element = window;
         } else {
-            obj.element =  document.querySelector(listenerArray[0]);
+            const fromShadow = elem.shadowRoot.querySelector(listenerArray[0]);
+            if (fromShadow) {
+                obj.element = fromShadow;
+            } else {
+                obj.element = document.querySelector(listenerArray[0]);
+            }
         }
     } else {
         obj.element =  elem;
@@ -89,22 +94,27 @@ const parseListener = (elem, listener: string) => {
 
     return obj;
 }
-export const bindListeners = (elem: any, constructor: any, listeners: any): void => {
-    Object.keys(constructor._listeners).forEach(listener => {
+
+export const unbindListeners = (elem: any, constructor: any, listeners: any): void => {
+    Object.keys(listeners).forEach(listener => {
         let parsedListener = parseListener(elem, listener);
         
-        parsedListener.element.addEventListener(parsedListener.event, e => {
-            elem[constructor._listeners[listener]](e);
+        parsedListener.element.removeEventListener(parsedListener.event, e => {
+            elem[listeners[listener]](e);
         })
     })
 }
 
-export const unbindListeners = (elem: any, constructor: any, listeners: any): void => {
-    Object.keys(constructor._listeners).forEach(listener => {
+// TODO figure out how to not re-apply the same listener
+export const bindListeners = (elem: any, constructor: any, listeners: any): void => {
+    Object.keys(listeners).forEach(listener => {
         let parsedListener = parseListener(elem, listener);
-        
-        parsedListener.element.removeEventListener(parsedListener.event, e => {
-            elem[constructor._listeners[listener]](e);
+        if (!parsedListener.element) {
+            return
+        }
+
+        parsedListener.element.addEventListener(parsedListener.event, e => {
+            elem[listeners[listener]](e);
         })
     })
 }
