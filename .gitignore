@@ -2,3 +2,4 @@ dist
 index.html
 src/app.ts
 tsconfig.json
+node_modules
