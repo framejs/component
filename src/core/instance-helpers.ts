@@ -58,7 +58,7 @@ export const defineElement = (tag: string, elementConstructor: any): void => {
 export const applyShadyCSS = (template: string, tag: string): void => {
     const templateEl = document.createElement("template");
     templateEl.innerHTML = template;
-    (<any>window).ShadyCSS.prepareTemplate(template, tag);
+    (<any>window).ShadyCSS.prepareTemplate(templateEl, tag);
 };
 
 export const registerListener = (elem: any, listener: string, name: string) => {

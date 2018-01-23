@@ -3,7 +3,8 @@ import { dashCase } from '../utils/dash-case.js';
 
 export const Attr = () => {
     return (target: any, name: string) => {
-        const attribute = dashCase(name);
+        // Using let as uglifying fails if const
+        let attribute = dashCase(name);
 
         // Register attribute for re-applying attributes when connected
         registerAttribute(target, attribute);

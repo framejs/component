@@ -19,8 +19,12 @@ npm install @framejs/component
 
 ## Decorators
 
-### @Component({tag: string})
-The main decorator that holds state provides a renderer (This is needed in order to use the rest of the decorators).
+### @Component({tag: string, update?: boolean})
+The main decorator that holds state and provides a renderer (This is needed in order to use the rest of the decorators).
+
+If `update` is set to `true`, every change on `@Attr` and `@Prop` will run `renderer()`, this should only be used in collaboration with `lit-html` or another dom library. More about custom renderers later in the readme.
+
+To manually run renderer use: `this.renderer();`
 
 ```ts
 import { Component } from '@framejs/component';
