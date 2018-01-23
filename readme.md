@@ -11,6 +11,11 @@ This framework utilises only typescript, and have no tight intergration with any
 ### A library, not a framework
 This library aims to suger the dev experience when writing custom elements, and to fit in to any build system.
 
+## Installing
+Install from NPM:
+```sh
+npm install @framejs/component
+```
 
 ## Decorators
 
