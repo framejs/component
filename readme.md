@@ -188,7 +188,7 @@ export class LitElement extends HTMLElement {
 }
 ```
 
-Inside your element templates you can use it like this: 
+Inside your element you can use it like this: 
 
 ```ts
 import { Component, Prop } from '@framejs/component';
@@ -197,7 +197,7 @@ import { html } from 'lit-html/lib/lit-exteded';
 @Component({
     tag: 'my-element'
 })
-class MyElement extends HTMLElement {
+class MyElement extends LitElement {
     @Prop() message: string = 'it\'s lit!';
     
     render() {
