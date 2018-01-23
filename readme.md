@@ -179,13 +179,13 @@ For complex components it can be a good idea to extend the renderer with somethi
 To enable your own renderer, you can make a mixin or class that has a renderer function. The renderer takes the template as an argument like this:
 
 ```ts
-    import { render } from 'lit-html/lib/lit-extended';
+import { render } from 'lit-html/lib/lit-extended';
 
-    export class LitElement extends HTMLElement {
-        renderer(template) {
-            render(template(), this.shadowRoot);
-        }
+export class LitElement extends HTMLElement {
+    renderer(template) {
+        render(template(), this.shadowRoot);
     }
+}
 ```
 
 Inside your element templates you can use it like this: 
