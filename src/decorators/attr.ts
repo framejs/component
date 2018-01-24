@@ -13,11 +13,11 @@ export const Attr = () => {
             set: function(value) {
                 // Get the value before it gets updated with new value
                 const oldValue = getPropValue(this, name);
-                
+
                 // Update _value with new value
                 setPropValue(this, name, value);
 
-                // Prevent triggering change events or rerendering 
+                // Prevent triggering change events or rerendering
                 // until the first iteration has finished.
                 if (!this.__connected) {
                     return;
@@ -26,9 +26,9 @@ export const Attr = () => {
                 // Run any function registered for this property using @Watch(name: string)
                 runObserver(this, name, oldValue, value);
                 setPropertyAsAttribute(this, attribute, value)
-                
+
                 this._invalidate();
-            }, 
+            },
             get: function() {
                 return getPropValue(this, name);
             }

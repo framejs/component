@@ -98,7 +98,7 @@ const parseListener = (elem, listener: string) => {
 export const unbindListeners = (elem: any, constructor: any, listeners: any): void => {
     Object.keys(listeners).forEach(listener => {
         let parsedListener = parseListener(elem, listener);
-        
+
         parsedListener.element.removeEventListener(parsedListener.event, e => {
             elem[listeners[listener]](e);
         })

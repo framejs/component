@@ -41,7 +41,7 @@ export const Component = (options: ComponentOptionsType) => {
 
             constructor() {
                 super();
-                
+
                 // Attach shadow if not set.
                 attachShadow(this);
             }
@@ -74,7 +74,7 @@ export const Component = (options: ComponentOptionsType) => {
             attributeChangedCallback(name, oldValue, newValue) {
                 super.attributeChangedCallback &&
                 super.attributeChangedCallback(name, oldValue, newValue);
-                
+
                 if (oldValue !== newValue) {
                     const property = camelCase(name);
                     this[property] = normaliseAttributeValue(
@@ -112,7 +112,7 @@ export const Component = (options: ComponentOptionsType) => {
                     // Update host template
                     this.shadowRoot.innerHTML = this.render();
                 }
-                
+
                 if (!this._listernesBound && target._listeners) bindListeners(this, target, target._listeners);
                 this._listernesBound = true;
             }
