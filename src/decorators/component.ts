@@ -13,7 +13,6 @@ import { camelCase } from "../utils/camel-case.js";
 
 export interface ComponentOptionsType {
     tag: string;
-    update?: boolean;
 }
 
 export const Component = (options: ComponentOptionsType) => {
@@ -24,9 +23,6 @@ export const Component = (options: ComponentOptionsType) => {
 
             // _needsRender is used to schedule micro-task for rendering.
             public _needsRender: boolean = false;
-
-            // _withUpdate
-            public _withUpdate: boolean = options.update;
 
             // _needsShadyCSS is checking if ShadyCSS is loaded and if it should shim the Element.
             public _needsShadyCSS: boolean = typeof (<any>window).ShadyCSS ===
@@ -62,8 +58,8 @@ export const Component = (options: ComponentOptionsType) => {
                 // Call any previously defined connectedCallback functions.
                 super.connectedCallback && super.connectedCallback();
 
-                // Only invalidate if _withUpdate
-                if (this._withUpdate) {
+                // Only invalidate if _renderOnPropertyChange
+                if (this._renderOnPropertyChange) {
                     this._invalidate();
                 } else {
                     this.renderer();
@@ -97,7 +93,7 @@ export const Component = (options: ComponentOptionsType) => {
                     this._needsRender = true;
                     this._needsRender = await false;
 
-                    if (this._withUpdate) {
+                    if (this._renderOnPropertyChange) {
                         this.renderer();
                     }
                 }

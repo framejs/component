@@ -1,6 +1,6 @@
 {
   "name": "@framejs/component",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A ultra light typescript framework for writing custom elements",
   "main": "dist/index.js",
   "scripts": {
@@ -19,5 +19,9 @@
     "url": "https://github.com/framejs/component/issues"
   },
   "homepage": "https://github.com/framejs/component#readme",
-  "devDependencies": {}
+  "devDependencies": {},
+  "dependencies": {
+    "lit-html": "^0.8.0",
+    "typescript": "^2.6.2"
+  }
 }

@@ -5,7 +5,7 @@ A ultra light typescript library for writing custom elements.
 ### Ultra light
 Less than 1.5kb (gzipped) if using all decorators in a custom element.
 
-### No dependencies
+### Simple, yet powerful
 This framework utilises only typescript, and have no tight intergration with any CLI or specific build tooling.
 
 ### A library, not a framework
@@ -180,24 +180,46 @@ class MyElement extends HTMLElement {
 }
 ```
 
+## Using lit-html element 
+`lit-html` is a great templating extension when working with complex components.
+
+Extend `LitElement` instead of `HTMLElement` to get all it offers.
+
+> It's important to use `html` string literal function as it converts the literal to lit-html.
+
+```ts
+import { Component, LitElement, html } from '@framejs/component';
+
+@Component({
+    tag: 'my-element'
+})
+class MyElement extends LitElement {
+    render() {
+        return html`I\m so lit!`;
+    }
+}
+```
+
 ## Extendable renderer
 The built in renderer is very simple, it just takes the returned value, and replaces innerHTML with the new template when updated.
 
-For complex components it can be a good idea to extend the renderer with something more complex like lit-html.
-
-To enable your own renderer, you can make a mixin or class that has a renderer function. The renderer takes the template as an argument like this:
+This example shows how `LitElement` is written.
 
 ```ts
 import { render } from 'lit-html/lib/lit-extended';
 
 export class LitElement extends HTMLElement {
+    // Set _renderOnPropertyChange if the renderer 
+    // should render on every property change.
+    public _renderOnPropertyChange = true;
+
     renderer(template) {
         render(template(), this.shadowRoot);
     }
 }
 ```
 
-Inside your element you can use it like this: 
+Inside your element you would use it like this: 
 
 ```ts
 import { Component, Prop } from '@framejs/component';
