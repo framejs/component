@@ -1,9 +1,7 @@
 import { camelCase } from "../utils/camel-case.js";
 
 export const attachShadow = (elem: any): void => {
-    if (!elem.shadowRoot) {
-        elem.attachShadow({ mode: "open" });
-    }
+    !elem.shadowRoot && elem.attachShadow({ mode: "open" });
 };
 
 export const setDefaultValues = (elem: any, values: any[]): void => {
@@ -16,15 +14,11 @@ export const setDefaultValues = (elem: any, values: any[]): void => {
     });
 };
 
-export const setDefaultAttributes = (elem: any, values: string[]): void => {
-    if (!values) {
-        return;
-    } else {
-        values.forEach(attribute => {
-            const property = camelCase(attribute);
-            elem[property] = elem[property];
-        });
-    }
+export const setDefaultAttributes = (elem: any, attributes: string[] = []): void => {
+    attributes.forEach(attribute => {
+        const prop = camelCase(attribute);
+        elem[prop] = elem[prop];
+    });
 };
 
 export const normaliseAttributeValue = (
@@ -49,16 +43,6 @@ export const normaliseAttributeValue = (
     if (newVal !== null && oldVal !== newVal) {
         return newVal;
     }
-};
-
-export const defineElement = (tag: string, elementConstructor: any): void => {
-    (<any>window).customElements.define(tag, elementConstructor);
-};
-
-export const applyShadyCSS = (template: string, tag: string): void => {
-    const templateEl = document.createElement("template");
-    templateEl.innerHTML = template;
-    (<any>window).ShadyCSS.prepareTemplate(templateEl, tag);
 };
 
 export const registerListener = (elem: any, listener: string, name: string) => {

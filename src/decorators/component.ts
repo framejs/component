@@ -2,8 +2,8 @@ import {
     attachShadow,
     setDefaultValues,
     normaliseAttributeValue,
-    defineElement,
-    applyShadyCSS,
+    // defineElement,
+    // applyShadyCSS,
     setDefaultAttributes,
     bindListeners,
     unbindListeners
@@ -13,6 +13,7 @@ import { camelCase } from "../utils/camel-case.js";
 
 export interface ComponentOptionsType {
     tag: string;
+    style?: string;
 }
 
 export const Component = (options: ComponentOptionsType) => {
@@ -52,8 +53,7 @@ export const Component = (options: ComponentOptionsType) => {
 
                 // _values gets set by @Attr and @Prop decorators
                 if (this._values) setDefaultValues(this, this._values);
-                if (target._observedAttributes)
-                    setDefaultAttributes(this, target._observedAttributes);
+                if (target._observedAttributes) setDefaultAttributes(this, target._observedAttributes);
 
                 // Call any previously defined connectedCallback functions.
                 super.connectedCallback && super.connectedCallback();
@@ -100,9 +100,11 @@ export const Component = (options: ComponentOptionsType) => {
             }
 
             renderer() {
-                if (this._needsShadyCSS && this.render) {
-                    // Inject element Shady css into document.head
-                    applyShadyCSS(this.render(), this.localName);
+                const styleTemplate = document.createElement("template");
+                styleTemplate.innerHTML = `<style>${options.style}</style>`;
+
+                if (this._needsShadyCSS && options.style && this.render) {
+                    (<any>window).ShadyCSS.prepareTemplate(styleTemplate, this.localName);
                 }
 
                 if (super.renderer) {
@@ -113,13 +115,16 @@ export const Component = (options: ComponentOptionsType) => {
                     this.shadowRoot.innerHTML = this.render();
                 }
 
+                // Append style template to shadowRoot
+                this.shadowRoot.appendChild(styleTemplate.content.cloneNode(true))
+                
                 if (!this._listernesBound && target._listeners) bindListeners(this, target, target._listeners);
                 this._listernesBound = true;
             }
         };
 
         // Define element in customElements registry
-        defineElement(options.tag, hostConstructor);
+        (<any>window).customElements.define(options.tag, hostConstructor);
         return hostConstructor;
     };
 };
