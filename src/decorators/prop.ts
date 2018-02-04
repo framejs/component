@@ -9,7 +9,7 @@ export const Prop = () => {
                 // Update _value with new value
                 setPropValue(this, name, value);
 
-                // Prevent triggering change events or rerendering 
+                // Prevent triggering change events or rerendering
                 // until the first iteration has finished.
                 if (!this.__connected) {
                     return;
@@ -17,9 +17,9 @@ export const Prop = () => {
 
                 // Run any function registered for this property using @Watch(name: string)
                 runObserver(this, name, oldValue, value);
-                
+
                 this._invalidate();
-            }, 
+            },
             get: function() {
                 return getPropValue(this, name);
             }

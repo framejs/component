@@ -42,7 +42,7 @@ export const Component = (options: ComponentOptionsType) => {
 
             constructor() {
                 super();
-                
+
                 // Attach shadow if not set.
                 attachShadow(this);
             }
@@ -74,7 +74,7 @@ export const Component = (options: ComponentOptionsType) => {
             attributeChangedCallback(name, oldValue, newValue) {
                 super.attributeChangedCallback &&
                 super.attributeChangedCallback(name, oldValue, newValue);
-                
+
                 if (oldValue !== newValue) {
                     const property = camelCase(name);
                     this[property] = normaliseAttributeValue(
