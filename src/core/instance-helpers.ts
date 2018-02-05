@@ -45,60 +45,58 @@ export const normaliseAttributeValue = (
     }
 };
 
-export const registerListener = (elem: any, listener: string, name: string) => {
+export const registerListener = (elem: any, listener: string, name: string, target?: any) => {
     if (!elem.constructor._listeners) {
         elem.constructor._listeners = {
-            [listener]: name
+            [listener]: {
+                name: name,
+                target: target
+            }
         };
     } else {
-        elem.constructor._listeners[listener] = name;
+        elem.constructor._listeners[listener] = {
+            name: name,
+            target: target
+        };
     }
 };
 
-const parseListener = (elem, listener: string) => {
-    const listenerArray = listener.split(':');
+const parseListener = (elem, event: string, target?: any) => {
     const obj = {
-        event: listenerArray.length > 1 ? listenerArray[1]: listenerArray[0],
-        element: null
-    };
-    if (listenerArray.length > 1) {
-        if (listenerArray[0] === 'window') {
-            obj.element = window;
-        } else {
-            const fromShadow = elem.shadowRoot.querySelector(listenerArray[0]);
-            if (fromShadow) {
-                obj.element = fromShadow;
-            } else {
-                obj.element = document.querySelector(listenerArray[0]);
-            }
-        }
+        event: event,
+        target: null
+    }
+
+    if (target) {
+        obj.target = target;
+    } else if (typeof target === 'undefined') {
+        obj.target = elem.shadowRoot;
     } else {
-        obj.element =  elem.shadowRoot;
+        return;
     }
 
     return obj;
 }
 
 export const unbindListeners = (elem: any, constructor: any, listeners: any): void => {
-    Object.keys(listeners).forEach(listener => {
-        let parsedListener = parseListener(elem, listener);
+    Object.keys(listeners).forEach((listener: any) => {
+        let parsedListener = parseListener(elem, listener, listeners[listener].target);
 
-        parsedListener.element.removeEventListener(parsedListener.event, e => {
-            elem[listeners[listener]](e);
+        parsedListener.target.removeEventListener(parsedListener.event, e => {
+            elem[listeners[listener].name](e);
         })
     })
 }
 
-// TODO figure out how to not re-apply the same listener
 export const bindListeners = (elem: any, constructor: any, listeners: any): void => {
-    Object.keys(listeners).forEach(listener => {
-        let parsedListener = parseListener(elem, listener);
-        if (!parsedListener.element) {
+    Object.keys(listeners).forEach((listener: any) => {
+        let parsedListener = parseListener(elem, listener, listeners[listener].target);
+        if (!parsedListener.target) {
             return
         }
 
-        parsedListener.element.addEventListener(parsedListener.event, e => {
-            elem[listeners[listener]](e);
+        parsedListener.target.addEventListener(parsedListener.event, e => {
+            elem[listeners[listener].name](e);
         })
     })
 }
