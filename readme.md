@@ -19,18 +19,20 @@ npm install @framejs/component
 
 ## Decorators
 
-### @Component({tag: string, update?: boolean})
+### @Component({tag: string, style?: string})
 The main decorator that holds state provides a renderer (this is needed in order to use the rest of the decorators).
 
-If `update` is set to `true`, every change on `@Attr` and `@Prop` will run `renderer()`, this should only be used in collaboration with `lit-html` or another dom library. More about custom renderers later in the readme.
+To manually run the renderer use: `this._invalidate();`
 
-To manually run the renderer use: `this.renderer();`
+To auto-render on `@Attr` and `@Prop` changes set `this._renderOnPropertyChange = true`.
+This should only be done with a smart renderer function. it's enabled by default when extending LitElement.
 
 ```ts
 import { Component } from '@framejs/component';
 
 @Component({
-    tag: 'my-element'
+    tag: 'my-element',
+    style: ':host { color: blue; }'
 })
 class MyElement extends HTMLElement {
     render() {
@@ -127,7 +129,7 @@ class MyElement extends HTMLElement {
 }
 ```
 
-### @Listen(event: string) Function
+### @Listen(event: string, target?: window | document) Function
 Listens for events and executes the nested logic.
 
 ```ts
@@ -138,50 +140,45 @@ import { Component, Listen } from '@framejs/component';
 })
 class MyElement extends HTMLElement {
     @Listen('click')
-    clickedHandler(event) {
+    clickedOnInstanceHandler(event) {
+        console.log(event)
+    }
+
+    @Listen('resize', window)
+    windowResizeHandler(event) {
         console.log(event)
     }
 }
 ```
 
-It's also possible to listen for events on specific elements inside render template
+It's also possible to listen for events from child elements
 
 ```ts
 import { Component, Listen } from '@framejs/component';
+import './my-other-element';
 
 @Component({
     tag: 'my-element'
 })
 class MyElement extends HTMLElement {
-    @Listen('#myInput:input')
-    focusHandler(event) {
-        console.log(`New value of input: ${event.data}`);
+    @Listen('onOtherElementClicked')
+    onOtherElementClickedHandler(event) {
+        console.log(event)
     }
 
     render() {
-        return `<input type="text" id="myInput">`;
+        return `
+            // my-other-element emits an customEvent called 'onOtherElementClicked'.
+            <my-other-element></my-other-element>
+        `;
     }
 }
 ```
 
-You can also select global elements
-
-```ts
-import { Component, Listen } from '@framejs/component';
-
-@Component({
-    tag: 'my-element'
-})
-class MyElement extends HTMLElement {
-    @Listen('window:resize')
-    windowResized(event) {
-        console.log(`Window width: ${event.path[0].innerWidth}px`);
-    }
-}
-```
 
 ## Using lit-html element
 `lit-html` is a great templating extension when working with complex components.
+Read more about [lit-html](https://github.com/Polymer/lit-html).
 
 Extend `LitElement` instead of `HTMLElement` to get all it offers.
 

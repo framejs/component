@@ -57,6 +57,11 @@ export const registerAttribute = (elem: any, attribute: string): void => {
 }
 
 export const setPropertyAsAttribute = (elem: any, attribute: string, value: any) => {
+    // Prevent setting an attribute if value aren't defined
+    if (typeof value === 'undefined') {
+        return;
+    }
+
     // Set attribute as present with no value if true.
     if (typeof value === 'boolean') {
         if (!value) {
