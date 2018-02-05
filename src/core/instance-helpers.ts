@@ -73,7 +73,7 @@ const parseListener = (elem, listener: string) => {
             }
         }
     } else {
-        obj.element =  elem;
+        obj.element =  elem.shadowRoot;
     }
 
     return obj;
