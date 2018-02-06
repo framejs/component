@@ -1,7 +1,7 @@
 import { setPropValue, getPropValue, runObserver, setPropertyAsAttribute, registerAttribute } from '../core/property-helpers.js';
 import { dashCase } from '../utils/dash-case.js';
 
-export const Attr = () => {
+export const Attribute = () => {
     return (target: any, name: string) => {
         // Using let as uglifying fails if const
         let attribute = dashCase(name);
