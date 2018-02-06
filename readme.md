@@ -19,7 +19,7 @@ npm install @framejs/component
 
 ## Decorators
 
-### @Component({tag: string, style?: string})
+### @CustomElement({tag: string, style?: string})
 The main decorator that holds state provides a renderer (this is needed in order to use the rest of the decorators).
 
 To manually run the renderer use: `this._invalidate();`
@@ -28,9 +28,9 @@ To auto-render on `@Attr` and `@Prop` changes set `this._renderOnPropertyChange 
 This should only be done with a smart renderer function. it's enabled by default when extending LitRenderer.
 
 ```ts
-import { Component } from '@framejs/component';
+import { CustomElement } from '@framejs/component';
 
-@Component({
+@CustomElement({
     tag: 'my-element',
     style: ':host { color: blue; }'
 })
@@ -41,19 +41,19 @@ class MyElement extends HTMLElement {
 }
 ```
 
-### @Attr() [property]: string | boolean | number
+### @Attribute() [property]: string | boolean | number
 Decorates the element with an attribute setter and getter and updates state/render on change. Updating the property from within the element or externally will update the attribute in the rendered HTML and the other way around.
 
 Providing a default value will set the attribute when the element is ready. If the attribute is already set by the user, the default will be overwritten.
 
 ```ts
-import { Component, Attr } from '@framejs/component';
+import { CustomElement, Attribute } from '@framejs/component';
 
-@Component({
+@CustomElement({
     tag: 'my-element'
 })
 class MyElement extends HTMLElement {
-    @Attr() target: string = 'World!'
+    @Attribute() target: string = 'World!'
 
     render() {
         return `Hello ${this.target}`;
@@ -61,18 +61,18 @@ class MyElement extends HTMLElement {
 }
 ```
 
-### @Prop() [property]: any
+### @Property() [property]: any
 Decorates the element with a property setter and getter and updates state/render on change.
 This value will not be reflected in the rendered HTML as an attribute.
 
 ```ts
-import { Component, Prop } from '@framejs/component';
+import { CustomElement, Property } from '@framejs/component';
 
-@Component({
+@CustomElement({
     tag: 'my-element'
 })
 class MyElement extends HTMLElement {
-    @Prop() data: string[] = ['Hello', 'world!'];
+    @Property() data: string[] = ['Hello', 'world!'];
 
     render() {
         return `
@@ -84,19 +84,19 @@ class MyElement extends HTMLElement {
 }
 ```
 
-### @Watch(property: string) Function(oldValue: any, newValue: any)
+### @Observe(property: string) Function(oldValue: any, newValue: any)
 The function provided will get triggered when the property changes with the old and new value.
 
 ```ts
-import { Component, Prop } from '@framejs/component';
+import { CustomElement, Property, Observe } from '@framejs/component';
 
-@Component({
+@CustomElement({
     tag: 'my-element'
 })
 class MyElement extends HTMLElement {
-    @Prop() data: string[] = ['Hello', 'world!'];
+    @Property() data: string[] = ['Hello', 'world!'];
 
-    @Watch('data')
+    @Observe('data')
     dataChangedHandler(oldValue, newValue) {
         // Do something with the new data entry
     }
@@ -115,9 +115,9 @@ class MyElement extends HTMLElement {
 Creates a simple event emitter.
 
 ```ts
-import { Component, Emit, EventEmitter } from '@framejs/component';
+import { CustomElement, Emit, EventEmitter } from '@framejs/component';
 
-@Component({
+@CustomElement({
     tag: 'my-element'
 })
 class MyElement extends HTMLElement {
@@ -133,9 +133,9 @@ class MyElement extends HTMLElement {
 Listens for events and executes the nested logic.
 
 ```ts
-import { Component, Listen } from '@framejs/component';
+import { CustomElement, Listen } from '@framejs/component';
 
-@Component({
+@CustomElement({
     tag: 'my-element'
 })
 class MyElement extends HTMLElement {
@@ -154,10 +154,10 @@ class MyElement extends HTMLElement {
 It's also possible to listen for events from child elements
 
 ```ts
-import { Component, Listen } from '@framejs/component';
+import { CustomElement, Listen } from '@framejs/component';
 import './my-other-element';
 
-@Component({
+@CustomElement({
     tag: 'my-element'
 })
 class MyElement extends HTMLElement {
@@ -185,9 +185,9 @@ Extend `LitRenderer` instead of `HTMLElement` to get all it offers.
 > It's important to use `html` string literal function as it converts the literal to lit-html.
 
 ```ts
-import { Component, LitRenderer, html } from '@framejs/component';
+import { CustomElement, LitRenderer, html } from '@framejs/component';
 
-@Component({
+@CustomElement({
     tag: 'my-element'
 })
 class MyElement extends LitRenderer {
@@ -219,14 +219,14 @@ export class LitRenderer extends HTMLElement {
 Inside your element you can use it like this:
 
 ```ts
-import { Component, Prop } from '@framejs/component';
+import { CustomElement, Property } from '@framejs/component';
 import { html } from 'lit-html/lib/lit-exteded';
 
-@Component({
+@CustomElement({
     tag: 'my-element'
 })
 class MyElement extends LitRenderer {
-    @Prop() message: string = 'it\'s lit!';
+    @Property() message: string = 'it\'s lit!';
 
     render() {
         return html`${this.message}`;

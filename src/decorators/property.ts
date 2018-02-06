@@ -1,6 +1,6 @@
 import { setPropValue, getPropValue, runObserver } from '../core/property-helpers.js';
 
-export const Prop = () => {
+export const Property = () => {
     return (target: any, name: string) => {
         const propertyDefinition = {
             set: function(value) {

@@ -2,8 +2,6 @@ import {
     attachShadow,
     setDefaultValues,
     normaliseAttributeValue,
-    // defineElement,
-    // applyShadyCSS,
     setDefaultAttributes,
     bindListeners,
     unbindListeners
@@ -11,12 +9,12 @@ import {
 
 import { camelCase } from "../utils/camel-case.js";
 
-export interface ComponentOptionsType {
+export interface CustomElementOptionsType {
     tag: string;
     style?: string;
 }
 
-export const Component = (options: ComponentOptionsType) => {
+export const CustomElement = (options: CustomElementOptionsType) => {
     return (target: any) => {
         const hostConstructor: any = class extends (target as { new (): any }) {
             // __connected will be true when connectedCallback has fired.
@@ -54,7 +52,7 @@ export const Component = (options: ComponentOptionsType) => {
                 // Let other decorators know that the component is instanciated.
                 this.__connected = true;
 
-                // _values gets set by @Attr and @Prop decorators
+                // _values gets set by @Attribute and @Property decorators
                 if (this._values) setDefaultValues(this, this._values);
                 if (target._observedAttributes) setDefaultAttributes(this, target._observedAttributes);
 
@@ -70,8 +68,9 @@ export const Component = (options: ComponentOptionsType) => {
             }
 
             disconnectedCallback() {
-                if (target._listeners)
+                if (target._listeners) {
                     unbindListeners(this, target, target._listeners);
+                }
             }
 
             attributeChangedCallback(name, oldValue, newValue) {
@@ -124,8 +123,10 @@ export const Component = (options: ComponentOptionsType) => {
                     this._needsStyle = false;
                 }
                 
-                if (!this._listernesBound && target._listeners) bindListeners(this, target, target._listeners);
-                this._listernesBound = true;
+                if (!this._listernesBound && target._listeners) {
+                    bindListeners(this, target, target._listeners);
+                    this._listernesBound = true;
+                }
             }
         };
 
