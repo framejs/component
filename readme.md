@@ -25,7 +25,7 @@ The main decorator that holds state provides a renderer (this is needed in order
 To manually run the renderer use: `this._invalidate();`
 
 To auto-render on `@Attr` and `@Prop` changes set `this._renderOnPropertyChange = true`.
-This should only be done with a smart renderer function. it's enabled by default when extending LitElement.
+This should only be done with a smart renderer function. it's enabled by default when extending LitRenderer.
 
 ```ts
 import { Component } from '@framejs/component';
@@ -176,21 +176,21 @@ class MyElement extends HTMLElement {
 ```
 
 
-## Using lit-html element
+## Using lit-html renderer
 `lit-html` is a great templating extension when working with complex components.
 Read more about [lit-html](https://github.com/Polymer/lit-html).
 
-Extend `LitElement` instead of `HTMLElement` to get all it offers.
+Extend `LitRenderer` instead of `HTMLElement` to get all it offers.
 
 > It's important to use `html` string literal function as it converts the literal to lit-html.
 
 ```ts
-import { Component, LitElement, html } from '@framejs/component';
+import { Component, LitRenderer, html } from '@framejs/component';
 
 @Component({
     tag: 'my-element'
 })
-class MyElement extends LitElement {
+class MyElement extends LitRenderer {
     render() {
         return html`I\m so lit!`;
     }
@@ -200,12 +200,12 @@ class MyElement extends LitElement {
 ## Extendable renderer
 The built in renderer is very simple: it receives the returned value, and replaces innerHTML with the new template when updated.
 
-This example shows how `LitElement` is written.
+This example shows how `LitRenderer` is written.
 
 ```ts
 import { render } from 'lit-html/lib/lit-extended';
 
-export class LitElement extends HTMLElement {
+export class LitRenderer extends HTMLElement {
     // Set _renderOnPropertyChange if the renderer
     // should render on every property change.
     public _renderOnPropertyChange = true;
@@ -225,7 +225,7 @@ import { html } from 'lit-html/lib/lit-exteded';
 @Component({
     tag: 'my-element'
 })
-class MyElement extends LitElement {
+class MyElement extends LitRenderer {
     @Prop() message: string = 'it\'s lit!';
 
     render() {

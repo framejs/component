@@ -28,6 +28,9 @@ export const Component = (options: ComponentOptionsType) => {
             // _needsShadyCSS is checking if ShadyCSS is loaded and if it should shim the Element.
             public _needsShadyCSS: boolean = typeof (<any>window).ShadyCSS ===
                 "object";
+            
+            // _needsStyle is used to tell if style has already been applied
+            public _needsStyle: boolean = true;
 
             public _listernesBound: boolean = false;
 
@@ -116,7 +119,10 @@ export const Component = (options: ComponentOptionsType) => {
                 }
 
                 // Append style template to shadowRoot
-                this.shadowRoot.appendChild(styleTemplate.content.cloneNode(true))
+                if (this._needsStyle) {
+                    this.shadowRoot.appendChild(styleTemplate.content.cloneNode(true));
+                    this._needsStyle = false;
+                }
                 
                 if (!this._listernesBound && target._listeners) bindListeners(this, target, target._listeners);
                 this._listernesBound = true;
